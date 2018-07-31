@@ -9,7 +9,7 @@
             "value" : "GEN-UNIQUE"
         },
         "sourceCodeRepositoryURL": {
-            "value": "ENTER PATH TO YOUR FORK OF - https://github.com/Azure-Samples/media-services-dotnet-functions-integration"
+            "value": "https://github.com/ericbNgine/media-services-dotnet-functions-integration-test"
         },
         "sourceCodeBranch": {
             "value": "master"
