@@ -29,7 +29,7 @@ Follow the guidelines in the [git tutorial](1-CONTRIBUTION-GUIDE/git-tutorial.md
 
 Note : if you never provided your GitHub account in the Azure portal before, the continous integration probably will probably fail and you won't see the functions. In that case, you need to setup it manually. Go to your azure functions deployment / Functions app settings / Configure continous integration. Select GitHub as a source and configure it to use your fork.
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fmedia-services-dotnet-functions-integration%2Fmaster%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FericbNgine%2Fmedia-services-dotnet-functions-integration-test%2Fmaster%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
@@ -50,7 +50,7 @@ This template creates a Logic app that listens to an onedrive folder and will co
 
 ### 1. Deploy the logic app
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fmedia-services-dotnet-functions-integration%2Fmaster%2Fmedia-functions-for-logic-app%2Flogicapp1-simplevod-deploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FericbNgine%2Fmedia-services-dotnet-functions-integration-test%2Fmaster%2Fmedia-functions-for-logic-app%2Flogicapp1-simplevod-deploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
@@ -71,7 +71,7 @@ This is the same workflow that the first logic app with two main differences:
 - the source is monitored using blob trigger (new file coming to an Azure Storage container)
 - the asset creation / blob copy is done through Azure functions to workaround the limitation of 50 MB. These functions have been tested with 1.8 GB files.
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fmedia-services-dotnet-functions-integration%2Fmaster%2Fmedia-functions-for-logic-app%2Flogicapp2-simplevod-storage-deploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FericbNgine%2Fmedia-services-dotnet-functions-integration-test%2Fmaster%2Fmedia-functions-for-logic-app%2Flogicapp2-simplevod-storage-deploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
@@ -91,7 +91,7 @@ This template creates a Logic app which
 * generates a short playback URL (using bitlink)
 * sends an email with Outlook when the process is complete or if the job failed. In the email, the playback link includes the two subtitles.
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fmedia-services-dotnet-functions-integration%2Fmaster%2Fmedia-functions-for-logic-app%2Flogicapp3-advancedvod-deploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FericbNgine%2Fmedia-services-dotnet-functions-integration-test%2Fmaster%2Fmedia-functions-for-logic-app%2Flogicapp3-advancedvod-deploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
@@ -108,7 +108,7 @@ This template creates a Logic app which processes a live program (from a live ch
 * gets the text, faces and motion detection information and sends this data to a Cosmos database,
 * optionnaly copy the faces to a dedicated Azure storage container.
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fmedia-services-dotnet-functions-integration%2Fmaster%2Fmedia-functions-for-logic-app%2Flogicapp4-liveanalytics-deploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FericbNgine%2Fmedia-services-dotnet-functions-integration-test%2Fmaster%2Fmedia-functions-for-logic-app%2Flogicapp4-liveanalytics-deploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
@@ -136,7 +136,7 @@ This template creates a Logic app which
 * publishes the asset with dynamic packaging for adaptive streaming.
 
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fmedia-services-dotnet-functions-integration%2Fmaster%2Fmedia-functions-for-logic-app%2Flogicapp5-preencoded-asset-deploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FericbNgine%2Fmedia-services-dotnet-functions-integration-test%2Fmaster%2Fmedia-functions-for-logic-app%2Flogicapp5-preencoded-asset-deploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
