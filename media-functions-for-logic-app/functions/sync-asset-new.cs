@@ -172,7 +172,7 @@ namespace media_functions_for_logic_app
                        }
                    }
                    */
-                log.Info($"Witness 2 ");
+                log.Info($"Witness 3 ");
                 //Adding mecanic to list all sub dir (original just lists elements in given folder and consider them as blob even if they are subdirs)
                 //var folders = blobs.Where(b => b as CloudBlobDirectory != null).ToList();
 
@@ -194,25 +194,27 @@ namespace media_functions_for_logic_app
                             log.Info($"Blob found Name : " + blob.Name);
                             String potentialName = Path.GetFileName(blob.Name);
                             log.Info($"Blob potentialName : " + potentialName);
-                            if (aflist.Contains(blob.Name))
+                            String normalizedName = potentialName;
+                            if (aflist.Contains(normalizedName))
                             {
-                                log.Info($" aflist.Contains Blob found Name : " + blob.Name);
-                                var assetFile = asset.AssetFiles.Where(af => af.Name == blob.Name).FirstOrDefault();
+                                log.Info($" aflist.Contains Blob found Name : " + normalizedName);
+                                var assetFile = asset.AssetFiles.Where(af => af.Name == normalizedName).FirstOrDefault();
                                 assetFile.ContentFileSize = blob.Properties.Length;
                                 assetFile.Update();
-                                log.Info($"Asset file updated : {assetFile.Name}");
+                                log.Info($"Asset file updated : {normalizedName}");
                             }
                             else
                             {
-                                log.Info($"Create Blob found Name : " + blob.Name);
-
-                                var assetFile = asset.AssetFiles.Create(blob.Name);
+                                log.Info($"Create Blob found Name : " + normalizedName);
+                               
+                                var assetFile = asset.AssetFiles.Create(normalizedName);
                                 assetFile.ContentFileSize = blob.Properties.Length;
                                 assetFile.Update();
-                                log.Info($"Asset file created : {assetFile.Name}");
+                                log.Info($"Asset file created : {normalizedName}");
                             }
                         }
                     } else {
+                        //TODO redefine !
                         CloudBlockBlob blob = (CloudBlockBlob)blobItem;
                         blob.FetchAttributes();
                         log.Info($"Blob2 found uri : " + blob.Uri);
