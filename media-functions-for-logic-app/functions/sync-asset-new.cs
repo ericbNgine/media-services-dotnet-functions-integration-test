@@ -172,13 +172,12 @@ namespace media_functions_for_logic_app
                    */
                 //Adding mecanic to list all sub dir (original just lists elements in given folder and consider them as blob even if they are subdirs)
                 var folders = blobs.Where(b => b as CloudBlobDirectory != null).ToList();
-                foreach (var folder in folders)
+                foreach (IListBlobItem item in folders)
                 {
-                    log.Info($"CloudBlobDirectory found : " + folder.Uri);
-                }
-                
-                foreach (CloudBlockBlob blob in folders)
-                {
+                    CloudBlockBlob blob = (CloudBlockBlob)item;
+                    blob.FetchAttributes();
+                    log.Info($"Blob found uri : " + blob.Uri);
+                    log.Info($"Blob found Name : " + blob.Name);
                     if (aflist.Contains(blob.Name))
                     {
                         var assetFile = asset.AssetFiles.Where(af => af.Name == blob.Name).FirstOrDefault();
@@ -194,8 +193,7 @@ namespace media_functions_for_logic_app
                         log.Info($"Asset file created : {assetFile.Name}");
                     }
                 }
-                
-
+                  
                 asset.Update();
                 MediaServicesHelper.SetAFileAsPrimary(asset);
 
