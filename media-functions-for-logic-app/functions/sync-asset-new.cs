@@ -25,6 +25,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using System.Collections.Generic;
+using System.IO;
 
 namespace media_functions_for_logic_app
 {
@@ -113,7 +114,11 @@ namespace media_functions_for_logic_app
                 
 
                 CloudBlobContainer assetContainer = CopyBlobHelpers.GetCloudBlobContainer(storname, storkey, asset.Uri.Segments[1]);
-
+                foreach(String seg in asset.Uri.Segments)
+                {
+                    log.Info($"> asset.Uri.Segments :" + seg);
+                }
+              
                 /*IEnumerable<CloudBlobContainer> containers = blobClient.ListContainers();
                 foreach (CloudBlobContainer item in containers)
                 {
@@ -145,10 +150,7 @@ namespace media_functions_for_logic_app
                 log.Info($"blobsPseudo retrieved");
 
                 log.Info($"blobsPseudo count : {blobsPseudo.Count()}");
-
-                
-                  
-
+                 
                 var aflist = asset.AssetFiles.ToList().Select(af => af.Name);
 
                 /*   OLD WAY 
@@ -170,13 +172,14 @@ namespace media_functions_for_logic_app
                        }
                    }
                    */
-                log.Info($"Witness : ");
+                log.Info($"Witness 2 ");
                 //Adding mecanic to list all sub dir (original just lists elements in given folder and consider them as blob even if they are subdirs)
                 //var folders = blobs.Where(b => b as CloudBlobDirectory != null).ToList();
 
                 //this is supposedly a 2 levels scenario... might not suits our case yet (one more level?)
                 foreach (IListBlobItem blobItem in blobsPseudo)
                 {
+                    log.Info($"blobItem found : ");
                     if (blobItem is CloudBlobDirectory)
                     {
                         CloudBlobDirectory directory = (CloudBlobDirectory)blobItem;
@@ -189,8 +192,11 @@ namespace media_functions_for_logic_app
                             blob.FetchAttributes();
                             log.Info($"Blob found uri : " + blob.Uri);
                             log.Info($"Blob found Name : " + blob.Name);
+                            String potentialName = Path.GetFileName(blob.Name);
+                            log.Info($"Blob potentialName : " + potentialName);
                             if (aflist.Contains(blob.Name))
                             {
+                                log.Info($" aflist.Contains Blob found Name : " + blob.Name);
                                 var assetFile = asset.AssetFiles.Where(af => af.Name == blob.Name).FirstOrDefault();
                                 assetFile.ContentFileSize = blob.Properties.Length;
                                 assetFile.Update();
@@ -198,6 +204,8 @@ namespace media_functions_for_logic_app
                             }
                             else
                             {
+                                log.Info($"Create Blob found Name : " + blob.Name);
+
                                 var assetFile = asset.AssetFiles.Create(blob.Name);
                                 assetFile.ContentFileSize = blob.Properties.Length;
                                 assetFile.Update();
