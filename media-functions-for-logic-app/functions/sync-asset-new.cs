@@ -141,10 +141,10 @@ namespace media_functions_for_logic_app
                 log.Info($"assetContainer retrieved");
 
                 // Get hold of the destination blobs
-                var blobs = assetContainer.ListBlobs();
-                log.Info($"blobs retrieved");
+                var blobsPseudo = assetContainer.ListBlobs();
+                log.Info($"blobsPseudo retrieved");
 
-                log.Info($"blobs count : {blobs.Count()}");
+                log.Info($"blobsPseudo count : {blobsPseudo.Count()}");
 
                 
                   
@@ -170,27 +170,59 @@ namespace media_functions_for_logic_app
                        }
                    }
                    */
+                log.Info($"Witness : ");
                 //Adding mecanic to list all sub dir (original just lists elements in given folder and consider them as blob even if they are subdirs)
-                var folders = blobs.Where(b => b as CloudBlobDirectory != null).ToList();
-                foreach (IListBlobItem item in folders)
+                //var folders = blobs.Where(b => b as CloudBlobDirectory != null).ToList();
+
+                //this is supposedly a 2 levels scenario... might not suits our case yet (one more level?)
+                foreach (IListBlobItem blobItem in blobsPseudo)
                 {
-                    CloudBlockBlob blob = (CloudBlockBlob)item;
-                    blob.FetchAttributes();
-                    log.Info($"Blob found uri : " + blob.Uri);
-                    log.Info($"Blob found Name : " + blob.Name);
-                    if (aflist.Contains(blob.Name))
+                    if (blobItem is CloudBlobDirectory)
                     {
-                        var assetFile = asset.AssetFiles.Where(af => af.Name == blob.Name).FirstOrDefault();
-                        assetFile.ContentFileSize = blob.Properties.Length;
-                        assetFile.Update();
-                        log.Info($"Asset file updated : {assetFile.Name}");
-                    }
-                    else
-                    {
-                        var assetFile = asset.AssetFiles.Create(blob.Name);
-                        assetFile.ContentFileSize = blob.Properties.Length;
-                        assetFile.Update();
-                        log.Info($"Asset file created : {assetFile.Name}");
+                        CloudBlobDirectory directory = (CloudBlobDirectory)blobItem;
+                        IEnumerable<IListBlobItem> blobs = directory.ListBlobs();
+                        //ICloudBlob bi;
+                        foreach (var item in blobs)
+                        {
+                            log.Info($"item StorageUri : " + item.StorageUri);
+                            CloudBlockBlob blob = (CloudBlockBlob)item;
+                            blob.FetchAttributes();
+                            log.Info($"Blob found uri : " + blob.Uri);
+                            log.Info($"Blob found Name : " + blob.Name);
+                            if (aflist.Contains(blob.Name))
+                            {
+                                var assetFile = asset.AssetFiles.Where(af => af.Name == blob.Name).FirstOrDefault();
+                                assetFile.ContentFileSize = blob.Properties.Length;
+                                assetFile.Update();
+                                log.Info($"Asset file updated : {assetFile.Name}");
+                            }
+                            else
+                            {
+                                var assetFile = asset.AssetFiles.Create(blob.Name);
+                                assetFile.ContentFileSize = blob.Properties.Length;
+                                assetFile.Update();
+                                log.Info($"Asset file created : {assetFile.Name}");
+                            }
+                        }
+                    } else {
+                        CloudBlockBlob blob = (CloudBlockBlob)blobItem;
+                        blob.FetchAttributes();
+                        log.Info($"Blob2 found uri : " + blob.Uri);
+                        log.Info($"Blob2 found Name : " + blob.Name);
+                        if (aflist.Contains(blob.Name))
+                        {
+                            var assetFile = asset.AssetFiles.Where(af => af.Name == blob.Name).FirstOrDefault();
+                            assetFile.ContentFileSize = blob.Properties.Length;
+                            assetFile.Update();
+                            log.Info($"Asset2 file updated : {assetFile.Name}");
+                        }
+                        else
+                        {
+                            var assetFile = asset.AssetFiles.Create(blob.Name);
+                            assetFile.ContentFileSize = blob.Properties.Length;
+                            assetFile.Update();
+                            log.Info($"Asset2 file created : {assetFile.Name}");
+                        }
                     }
                 }
                   
