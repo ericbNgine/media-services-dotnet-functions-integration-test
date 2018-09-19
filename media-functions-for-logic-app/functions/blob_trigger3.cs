@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -41,14 +42,24 @@ namespace media_functions_for_logic_app.functions
             json.properties.sourceContainerPath = new SourceContainerPath();
             json.properties.sourceContainerPath.value = "csblob1"; 
 
-
-            string jsonStr = JsonConvert.SerializeObject(json);
-            log.Info($"C# Blob trigger function Processed json data is  : \n {jsonStr} ");
-            using (var client = new HttpClient())
-            {        
-                //var response = client.PostAsync(logicAppUri, new StringContent(name, Encoding.UTF8, "application/json")).Result;
-                var response = client.PostAsync(logicAppUri, new StringContent(jsonStr, Encoding.UTF8, "application/json")).Result;
+            if (IsMediaFile(json.properties.pathToItem.value))
+            {
+                log.Info($"C# Blob trigger function Media Is Movie go on ... \n  ");
+                string jsonStr = JsonConvert.SerializeObject(json);
+                log.Info($"C# Blob trigger function Processed json data is  : \n {jsonStr} ");
+                using (var client = new HttpClient())
+                {        
+                    //var response = client.PostAsync(logicAppUri, new StringContent(name, Encoding.UTF8, "application/json")).Result;
+                    var response = client.PostAsync(logicAppUri, new StringContent(jsonStr, Encoding.UTF8, "application/json")).Result;
+                }
             }
+        }
+        static string[] mediaExtensions = {
+             ".MP4", ".DIVX", ".WMV", ".MOV"
+        };
+        static bool IsMediaFile(string path)
+        {
+            return -1 != Array.IndexOf(mediaExtensions, Path.GetExtension(path).ToUpperInvariant());
         }
     }
     
