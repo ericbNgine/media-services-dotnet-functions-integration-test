@@ -3,7 +3,9 @@ using System.Net.Http;
 using System.Text;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
+using static media_functions_for_logic_app.SharedLibs.jsonRequestSchemeHelper;
 
 namespace media_functions_for_logic_app.functions
 {
@@ -14,13 +16,31 @@ namespace media_functions_for_logic_app.functions
         [FunctionName("blob_trigger2")]
         public static void Run([BlobTrigger("samples-workitems/{name}", Connection = "")]Stream myBlob, string name, TraceWriter log)
         {
-            log.Info($"C# Blob trigger function Processed blob\n Name:{name} \n Size: {myBlob.Length} Bytes");
+            //To set working folder dyna : Specify your container name in local.settings.json locally or in Application settings on Azure.
+            //{            "IsEncrypted": false,    "Values": {        ....         "MyBlobContainer":"samples-workitems"    }        }
+            //public static void Run([BlobTrigger("%MyBlobContainer%/{name}", Connection = "")]Stream myBlob, string name, TraceWriter log)
+
+            /*
+            //we could also try sthg like : public static void Run(CloudBlockBlob myBlob, TraceWriter log) from actionUpload3 so that we can get full Path of Blob
+            CloudBlockBlob yBlob;
+            string uri = yBlob.Uri.AbsolutePath;
+            string uriS = yBlob.StorageUri;
+            */
+        log.Info($"C# Blob trigger function Processed blob\n Name:{name} \n Size: {myBlob.Length} Bytes");
          
             var json = new Rootobject();
             json.properties = new Properties();
+
             json.properties.name = new Name();
             json.properties.name.value = name;
             json.properties.name.type = "string";
+
+            json.properties.pathToItem = new PathToItem();
+            json.properties.pathToItem.value = "https://storage3alxjilbtes2i.blob.core.windows.net/samples-workitems/" + name;//{"properties":{"name":{"value":"folder1/pitufo.png","type":"string"}},"type":null}
+            json.properties.sourceContainerPath = new SourceContainerPath();
+            json.properties.sourceContainerPath.value = "";//TODO?
+
+
             string jsonStr = JsonConvert.SerializeObject(json);
             log.Info($"C# Blob trigger function Processed json data is  : \n {jsonStr} ");
             using (var client = new HttpClient())
@@ -29,22 +49,5 @@ namespace media_functions_for_logic_app.functions
                 var response = client.PostAsync(logicAppUri, new StringContent(jsonStr, Encoding.UTF8, "application/json")).Result;
             }
         }
-    }
-    /* TODO move this in separate class :*/
-    public class Rootobject
-    {
-        public Properties properties { get; set; }
-        public string type { get; set; }
-    }
-
-    public class Properties
-    {
-        public Name name { get; set; } 
-    }
-
-    public class Name
-    {
-        public string value { get; set; }
-        public string type { get; set; }
     }
 }
