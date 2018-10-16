@@ -76,7 +76,7 @@ namespace media_functions_for_logic_app
                 _context = new CloudMediaContext(amsCredentials.AmsRestApiEndpoint, tokenProvider);
 
                 log.Info("Context object created.");
-
+                //https://social.msdn.microsoft.com/Forums/sqlserver/en-US/250d4b78-a05c-4622-a65b-79465a0c4aa8/create-an-empty-asset-within-an-existing-storage-container?forum=MediaServices
                 newAsset = _context.Assets.Create(assetName, (string)data.assetStorage, AssetCreationOptions.None);
 
                 log.Info("new asset created.");
