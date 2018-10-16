@@ -1,14 +1,9 @@
 using System;
 using System.IO;
-using System.Net.Http;
-using System.Text;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using ImageResizer;
-using ImageResizer.ExtensionMethods;
-using Newtonsoft.Json;
-using static media_functions_for_logic_app.SharedLibs.jsonRequestSchemeHelper;
 using System.Drawing;
+using ImageResizer;
 
 namespace media_functions_for_logic_app.functions
 {

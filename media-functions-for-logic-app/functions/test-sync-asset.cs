@@ -34,12 +34,12 @@ namespace media_functions_for_logic_app
         // Field for service context.
         private static CloudMediaContext _context = null;
 
-        [FunctionName("sync-asset-new")]
+        [FunctionName("test-sync-asset")]
         public static async Task<object> Run([HttpTrigger(WebHookType = "genericJson")]HttpRequestMessage req, TraceWriter log)
         {
             log.Info($"Webhook was triggered!");
-
-            
+            string jsonContent = await req.Content.ReadAsStringAsync();
+            return req.CreateResponse(HttpStatusCode.OK);
         }
     }
 }
