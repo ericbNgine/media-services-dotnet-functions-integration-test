@@ -19,6 +19,25 @@ namespace media_functions_for_logic_app.functions
   [Blob("sample-images-md/{name}", FileAccess.Write)] Stream imageMedium, string name, TraceWriter log)
         {
             log.Info($"C# Blob trigger function Processed blob\n Name:{name} \n Size: { image.Length} Bytes");
+            ///// 
+            using (System.Drawing.Image imageTemp = System.Drawing.Image.FromStream(image))
+            {
+                int h = imageTemp.Height;
+                int w = imageTemp.Width;
+                log.Info($"C# Blob trigger function Processed blob\n Name:{name} \n Image Height : {h}  \n Image Width : {w} ");
+                int targetedHeight;
+                if (h > w)
+                {
+                    targetedHeight = 720; //portrait
+                    log.Info($"C# Blob trigger function Processed blob\n Image is Portrait ");
+                }
+                else
+                {
+                    log.Info($"C# Blob trigger function Processed blob\n Image is Landscape ");
+                }
+            }
+                 
+            ////
             var imageBuilder = ImageResizer.ImageBuilder.Current;
             var size = imageDimensionsTable[ImageSize.Small];
 
