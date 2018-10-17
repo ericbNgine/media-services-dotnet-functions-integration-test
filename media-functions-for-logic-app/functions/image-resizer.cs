@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using System.Drawing;
 using ImageResizer;
+using System.Collections.Generic;
 
 namespace media_functions_for_logic_app.functions
 {
@@ -11,8 +12,10 @@ namespace media_functions_for_logic_app.functions
     {
         //private static string logicAppUri = @"https://prod-05.westus.logic.azure.com:443/.........";
         private static string logicAppUri = @"https://prod-03.westeurope.logic.azure.com:443/workflows/b9b2808d2cdd4e03b6556bf4b3b7f8b9/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=t7-GeSlUqaPf5orp34ztzwLjn_FAhLMfZCLTs9g087Y";
-        [FunctionName("image_resizer")]
-        public static void Run([BlobTrigger("gallery/{name}", Connection = "")]Stream myBlob, string name, Stream outputBlob, TraceWriter log)
+
+        // public static void Run([BlobTrigger("gallery/{name}", Connection = "")]Stream myBlob, string name, Stream outputBlob, TraceWriter log)
+        [FunctionName("image_resizer")]  
+        public static void Run([BlobTrigger("gallery/{name}", Connection = "")]Stream myBlob, string name, [Blob("gallery-resized/{name}", FileAccess.Write)] Stream outputBlob, TraceWriter log)
         {
             //To set working folder dyna : Specify your container name in local.settings.json locally or in Application settings on Azure.
             //{            "IsEncrypted": false,    "Values": {        ....         "MyBlobContainer":"samples-workitems"    }        }
@@ -29,14 +32,22 @@ namespace media_functions_for_logic_app.functions
             int h = image.Height;
             int w = image.Width;
         log.Info($"C# Blob trigger function Processed blob\n Name:{name} \n Image Height : {h}  \n Image Width : {w} ");
-
+            int targetedHeight;
+            if (h>w)
+            {
+                targetedHeight = 720; //portrait
+                log.Info($"C# Blob trigger function Processed blob\n Image is Portrait ");
+            } else
+            {
+                log.Info($"C# Blob trigger function Processed blob\n Image is Landscape ");
+            }
 
             var instructions = new Instructions
             {
                 Width = 200,
                 Mode = FitMode.Carve,
                 Scale = ScaleMode.Both
-            };
+            }; 
             ImageBuilder.Current.Build(new ImageJob(myBlob, outputBlob, instructions));
 
             /* >>>>>>>>>>>>>>>>>>>>>>> 
@@ -72,6 +83,14 @@ namespace media_functions_for_logic_app.functions
         {
             return -1 != Array.IndexOf(mediaExtensions, Path.GetExtension(path).ToUpperInvariant());
         }
+        //TODO ? : https://docs.microsoft.com/fr-fr/azure/azure-functions/functions-bindings-storage-blob :
+        public enum ImageSize { ExtraSmall, Small, Medium }
+
+        private static Dictionary<ImageSize, (int, int)> imageDimensionsTable = new Dictionary<ImageSize, (int, int)>() {
+            { ImageSize.ExtraSmall, (320, 200) },
+            { ImageSize.Small,      (640, 400) },
+            { ImageSize.Medium,     (800, 600) }
+        };
     }
     
 }
