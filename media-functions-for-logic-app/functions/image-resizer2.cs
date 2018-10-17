@@ -36,7 +36,8 @@ namespace media_functions_for_logic_app.functions
                     log.Info($"C# Blob trigger function Processed blob\n Image is Landscape ");
                 }
             }
-                 
+            
+            log.Info($"C# Blob trigger function Processed  \n Size after getting Width and Height: { image.Length} Bytes");
             ////
             var imageBuilder = ImageResizer.ImageBuilder.Current;
             var size = imageDimensionsTable[ImageSize.Small];
