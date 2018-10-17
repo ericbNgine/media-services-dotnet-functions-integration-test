@@ -35,21 +35,27 @@ namespace media_functions_for_logic_app.functions
                 {
                     log.Info($"C# Blob trigger function Processed blob\n Image is Landscape ");
                 }
+                try
+                {
+                    var imageBuilder = ImageResizer.ImageBuilder.Current;
+                    var size = imageDimensionsTable[ImageSize.Small];
+
+                    imageBuilder.Build(imageTemp, imageSmall,
+                        new ResizeSettings(size.Item1, size.Item2, FitMode.Max, null), false);
+
+                    image.Position = 0;
+                    size = imageDimensionsTable[ImageSize.Medium];
+
+                    imageBuilder.Build(imageTemp, imageMedium,
+                        new ResizeSettings(size.Item1, size.Item2, FitMode.Max, null), false);
+                }
+                catch (Exception e)
+                {
+                    log.Error($"some error Message ... : " + e.Message);
+                    log.Error($"some error Source ... : " + e.Source);
+                }
             }
-            
-            log.Info($"C# Blob trigger function Processed  \n Size after getting Width and Height: { image.Length} Bytes");
-            ////
-            var imageBuilder = ImageResizer.ImageBuilder.Current;
-            var size = imageDimensionsTable[ImageSize.Small];
-
-            imageBuilder.Build(image, imageSmall,
-                new ResizeSettings(size.Item1, size.Item2, FitMode.Max, null), false);
-
-            image.Position = 0;
-            size = imageDimensionsTable[ImageSize.Medium];
-
-            imageBuilder.Build(image, imageMedium,
-                new ResizeSettings(size.Item1, size.Item2, FitMode.Max, null), false);
+             
         }
 
         public enum ImageSize { ExtraSmall, Small, Medium }
