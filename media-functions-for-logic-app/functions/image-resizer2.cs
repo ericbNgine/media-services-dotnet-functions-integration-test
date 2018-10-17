@@ -2,37 +2,22 @@ using System;
 using System.IO;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
-using System.Drawing; 
+using System.Drawing;
+
 using System.Collections.Generic;
 using ImageResizer;
 
 namespace media_functions_for_logic_app.functions
 {
     public static class image_resizer2
-    { 
+    {
+        //private static string logicAppUri = @"https://prod-05.westus.logic.azure.com:443/.........";
         [FunctionName("image_resizer2")]
         public static void Run(
-          [BlobTrigger("sample-images/{name}")] Stream image,
-          [Blob("sample-images-sm/{name}", FileAccess.Write)] Stream imageSmall,
-          [Blob("sample-images-md/{name}", FileAccess.Write)] Stream imageMedium, string name, TraceWriter log)
+  [BlobTrigger("sample-images/{name}")] Stream image,
+  [Blob("sample-images-sm/{name}", FileAccess.Write)] Stream imageSmall,
+  [Blob("sample-images-md/{name}", FileAccess.Write)] Stream imageMedium)
         {
-            log.Info($"C# Blob trigger function Processed blob\n Name:{name} \n Size: { image.Length} Bytes");
-            Image imageTemp = Image.FromStream(image);
-            int h = imageTemp.Height;
-            int w = imageTemp.Width;
-            log.Info($"C# Blob trigger function Processed blob\n Name:{name} \n Image Height : {h}  \n Image Width : {w} ");
-            int targetedHeight;
-            if (h > w)
-            {
-                targetedHeight = 720; //portrait
-                log.Info($"C# Blob trigger function Processed blob\n Image is Portrait ");
-            }
-            else
-            {
-                log.Info($"C# Blob trigger function Processed blob\n Image is Landscape ");
-            }
-
-            //
             var imageBuilder = ImageResizer.ImageBuilder.Current;
             var size = imageDimensionsTable[ImageSize.Small];
 
