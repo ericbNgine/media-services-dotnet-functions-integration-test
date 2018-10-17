@@ -16,8 +16,9 @@ namespace media_functions_for_logic_app.functions
         public static void Run(
   [BlobTrigger("sample-images/{name}")] Stream image,
   [Blob("sample-images-sm/{name}", FileAccess.Write)] Stream imageSmall,
-  [Blob("sample-images-md/{name}", FileAccess.Write)] Stream imageMedium)
+  [Blob("sample-images-md/{name}", FileAccess.Write)] Stream imageMedium, string name, TraceWriter log)
         {
+            log.Info($"C# Blob trigger function Processed blob\n Name:{name} \n Size: { image.Length} Bytes");
             var imageBuilder = ImageResizer.ImageBuilder.Current;
             var size = imageDimensionsTable[ImageSize.Small];
 
